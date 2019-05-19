@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:700&display=swap');
+
+.balance {
+  display: flex;
+  margin-bottom: 30px;
+}
+
+.amount {
+  font-family: 'Roboto', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  color: #5c6975;
+  margin-right: 40px;
+}
+
+.deposit {
+  color: #96c562;
+}
+
+.withdrawal {
+  color: #e73439;
+}
