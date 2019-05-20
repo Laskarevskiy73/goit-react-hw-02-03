@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
 import shortid from 'shortid';
+import { NotificationContainer } from 'react-notifications';
+import Notification from './Notyfication';
 import Controls from './Controls';
 import Balance from './Balance';
 import TransactionHistory from './TransactionHistory';
-import style from './Dashboard.module.css';
+import style from './css/Dashboard.module.css';
+import 'react-notifications/lib/notifications.css';
 
+const notyfication = new Notification();
 const DEPOSIT = 'Deposit';
 const WITHDRAWAL = 'Withdrawal';
 
@@ -13,31 +17,38 @@ export default class Dashboard extends Component {
     history: [],
     balance: 0,
     amount: '',
+    type: '',
   };
 
   componentDidMount() {
     const historyItems = localStorage.getItem('items');
     const balanceHistory = localStorage.getItem('balance');
+    const transaction = localStorage.getItem('type');
 
     if (historyItems) {
       const history = JSON.parse(historyItems);
       const balance = JSON.parse(balanceHistory);
+      const type = JSON.parse(transaction);
 
-      this.setState({ history, balance });
+      this.setState({ history, balance, type });
     }
   }
 
   componentDidUpdate(prevState) {
-    const { history, balance } = this.state;
+    const { history, balance, type } = this.state;
 
     if (prevState.history !== history) {
       localStorage.setItem('items', JSON.stringify(history));
       localStorage.setItem('balance', JSON.stringify(balance));
+      localStorage.setItem('type', JSON.stringify(type));
     }
   }
 
   newTransaction = transaction => {
     const { amount } = this.state;
+
+    this.setState({ type: transaction });
+
     return {
       id: shortid.generate(),
       type: transaction,
@@ -56,7 +67,7 @@ export default class Dashboard extends Component {
     const { amount } = this.state;
 
     if (amount === '0' || amount === '') {
-      alert('Введите сумму для проведения операции!');
+      notyfication.createNotification('info')();
       this.resetField();
       return;
     }
@@ -65,6 +76,7 @@ export default class Dashboard extends Component {
       history: [...prevState.history, this.newTransaction(DEPOSIT)],
       balance: prevState.balance + Number(amount),
     }));
+    notyfication.createNotification('success')();
     this.resetField();
   };
 
@@ -72,13 +84,13 @@ export default class Dashboard extends Component {
     const { balance, amount } = this.state;
 
     if (balance < amount) {
-      alert('На счету недостаточно средств для проведения операции!');
+      notyfication.createNotification('error')();
       this.resetField();
       return;
     }
 
     if (amount === '0' || amount === '') {
-      alert('Введите сумму для проведения операции!');
+      notyfication.createNotification('info')();
       this.resetField();
       return;
     }
@@ -87,6 +99,7 @@ export default class Dashboard extends Component {
       history: [...prevState.history, this.newTransaction(WITHDRAWAL)],
       balance: prevState.balance - Number(amount),
     }));
+    notyfication.createNotification('success')();
     this.resetField();
   };
 
@@ -94,20 +107,11 @@ export default class Dashboard extends Component {
     this.setState({ amount: '' });
   };
 
-  amountDeposit = () => {
-    const { history } = this.state;
+  balanceCalculation = () => {
+    const { history, type } = this.state;
 
     return history.reduce(
-      (acc, item) => (item.type === DEPOSIT ? acc + item.amount : acc),
-      0,
-    );
-  };
-
-  amountWithdraval = () => {
-    const { history } = this.state;
-
-    return history.reduce(
-      (acc, item) => (item.type === WITHDRAWAL ? acc + item.amount : acc),
+      (acc, item) => (item.type === type ? acc + item.amount : acc),
       0,
     );
   };
@@ -125,10 +129,10 @@ export default class Dashboard extends Component {
         />
         <Balance
           balance={balance}
-          amountDeposit={this.amountDeposit}
-          amountWithdraval={this.amountWithdraval}
+          balanceCalculation={this.balanceCalculation}
         />
         <TransactionHistory items={history} />
+        <NotificationContainer />
       </div>
     );
   }

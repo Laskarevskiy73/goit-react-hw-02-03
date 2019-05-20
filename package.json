@@ -1,11 +1,15 @@
 {
+  "homepage": "https://laskarevskiy73.github.io/goit-react-hw-02-03/",
   "name": "goit-react-hw-02-03",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "gh-pages": "^2.0.1",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-notifications": "^1.4.3",
+    "react-notify-toast": "^0.5.0",
     "react-scripts": "3.0.1",
     "shortid": "^2.2.14"
   },

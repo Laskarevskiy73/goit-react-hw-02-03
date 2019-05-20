@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import style from './Controls.module.css';
+import style from './css/Controls.module.css';
 
 const Controls = ({ addingMoney, state, onDeposit, onWithdrawal }) => (
   <section className={style.controls}>

@@ -1,16 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import style from './Balance.module.css';
+import style from './css/Balance.module.css';
 
-const Balance = ({ balance, amountDeposit, amountWithdraval }) => (
+const Balance = ({ balance, balanceCalculation }) => (
   <section className={style.balance}>
     <p className={style.amount}>
       <span className={style.deposit}>⬆</span>
-      {amountDeposit().toLocaleString()}$
+      {balanceCalculation().toLocaleString()}$
     </p>
     <p className={style.amount}>
       <span className={style.withdrawal}>⬇</span>
-      {amountWithdraval().toLocaleString()}$
+      {balanceCalculation().toLocaleString()}$
     </p>
     <p className={style.amount}>Balance: {balance.toLocaleString()}$</p>
   </section>
@@ -18,8 +18,7 @@ const Balance = ({ balance, amountDeposit, amountWithdraval }) => (
 
 Balance.propTypes = {
   balance: PropTypes.number.isRequired,
-  amountDeposit: PropTypes.func.isRequired,
-  amountWithdraval: PropTypes.func.isRequired,
+  balanceCalculation: PropTypes.func.isRequired,
 };
 
 export default Balance;
